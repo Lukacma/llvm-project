@@ -6,7 +6,10 @@ target triple = "aarch64"
 
 define i64 @udiv() vscale_range(1, 16) {
 ; CHECK-LABEL: @udiv(
-; CHECK-NEXT:    ret i64 4
+; CHECK-NEXT:    [[A:%.*]] = tail call i64 @llvm.aarch64.sve.cntb(i32 31)
+; CHECK-NEXT:    [[B:%.*]] = tail call i64 @llvm.aarch64.sve.cntw(i32 31)
+; CHECK-NEXT:    [[C:%.*]] = udiv i64 [[A]], [[B]]
+; CHECK-NEXT:    ret i64 [[C]]
 ;
   %a = call i64 @llvm.aarch64.sve.cntb(i32 31)
   %b = call i64 @llvm.aarch64.sve.cntw(i32 31)
