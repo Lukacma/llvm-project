@@ -213,82 +213,88 @@ entry:
   ret void
 }
 
-define i32 @test_suqadd_s32(float noundef %a) {
+define void @test_suqadd_s32(float noundef %a, ptr %dst) {
 ; CHECK-LABEL: test_suqadd_s32:
 ; CHECK:       // %bb.0: // %entry
 ; CHECK-NEXT:    fcvtzs s0, s0
 ; CHECK-NEXT:    suqadd s0, s0
-; CHECK-NEXT:    fmov w0, s0
+; CHECK-NEXT:    str s0, [x0]
 ; CHECK-NEXT:    ret
 entry:
   %cvt = tail call i32 @llvm.aarch64.neon.fcvtzs.i32.f32(float %a)
   %res = tail call i32 @llvm.aarch64.neon.suqadd.i32(i32 %cvt, i32 %cvt)
-  ret i32 %res
+  store i32 %res, ptr %dst, align 4
+  ret void
 }
 
-define i64 @test_suqadd_s64(float noundef %a) {
+define void @test_suqadd_s64(float noundef %a, ptr %dst) {
 ; CHECK-LABEL: test_suqadd_s64:
 ; CHECK:       // %bb.0: // %entry
 ; CHECK-NEXT:    fcvtzs d0, s0
 ; CHECK-NEXT:    suqadd d0, d0
-; CHECK-NEXT:    fmov x0, d0
+; CHECK-NEXT:    str d0, [x0]
 ; CHECK-NEXT:    ret
 entry:
   %cvt = tail call i64 @llvm.aarch64.neon.fcvtzs.i64.f32(float %a)
   %res = tail call i64 @llvm.aarch64.neon.suqadd.i64(i64 %cvt, i64 %cvt)
-  ret i64 %res
+  store i64 %res, ptr %dst, align 8
+  ret void
 }
 
-define i32 @test_usqadd_s32(float noundef %a) {
+define void @test_usqadd_s32(float noundef %a, ptr %dst) {
 ; CHECK-LABEL: test_usqadd_s32:
 ; CHECK:       // %bb.0: // %entry
 ; CHECK-NEXT:    fcvtzs s0, s0
 ; CHECK-NEXT:    usqadd s0, s0
-; CHECK-NEXT:    fmov w0, s0
+; CHECK-NEXT:    str s0, [x0]
 ; CHECK-NEXT:    ret
 entry:
   %cvt = tail call i32 @llvm.aarch64.neon.fcvtzs.i32.f32(float %a)
   %res = tail call i32 @llvm.aarch64.neon.usqadd.i32(i32 %cvt, i32 %cvt)
-  ret i32 %res
+  store i32 %res, ptr %dst, align 4
+  ret void
 }
 
-define i64 @test_usqadd_s64(float noundef %a) {
+define void @test_usqadd_s64(float noundef %a, ptr %dst) {
 ; CHECK-LABEL: test_usqadd_s64:
 ; CHECK:       // %bb.0: // %entry
 ; CHECK-NEXT:    fcvtzs d0, s0
 ; CHECK-NEXT:    usqadd d0, d0
-; CHECK-NEXT:    fmov x0, d0
+; CHECK-NEXT:    str d0, [x0]
 ; CHECK-NEXT:    ret
 entry:
   %cvt = tail call i64 @llvm.aarch64.neon.fcvtzs.i64.f32(float %a)
   %res = tail call i64 @llvm.aarch64.neon.usqadd.i64(i64 %cvt, i64 %cvt)
-  ret i64 %res
+  store i64 %res, ptr %dst, align 8
+  ret void
 }
 
-define i32 @test_sqabs_s32(float noundef %a) {
+define void @test_sqabs_s32(float noundef %a, ptr %dst) {
 ; CHECK-LABEL: test_sqabs_s32:
 ; CHECK:       // %bb.0: // %entry
 ; CHECK-NEXT:    fcvtzs s0, s0
 ; CHECK-NEXT:    sqabs s0, s0
-; CHECK-NEXT:    fmov w0, s0
+; CHECK-NEXT:    str s0, [x0]
 ; CHECK-NEXT:    ret
 entry:
   %cvt = tail call i32 @llvm.aarch64.neon.fcvtzs.i32.f32(float %a)
   %res = tail call i32 @llvm.aarch64.neon.sqabs.i32(i32 %cvt)
-  ret i32 %res
+  store i32 %res, ptr %dst, align 4
+  ret void
 }
 
-define i64 @test_sqabs_s64(float noundef %a) {
+define void @test_sqabs_s64(float noundef %a, ptr %dst) {
 ; CHECK-LABEL: test_sqabs_s64:
 ; CHECK:       // %bb.0: // %entry
 ; CHECK-NEXT:    fcvtzs d0, s0
 ; CHECK-NEXT:    sqabs d0, d0
-; CHECK-NEXT:    fmov x0, d0
+; CHECK-NEXT:    str d0, [x0]
 ; CHECK-NEXT:    ret
 entry:
   %cvt = tail call i64 @llvm.aarch64.neon.fcvtzs.i64.f32(float %a)
   %res = tail call i64 @llvm.aarch64.neon.sqabs.i64(i64 %cvt)
-  ret i64 %res
+  store i64 %res, ptr %dst, align 8
+  ret void
 }
 
 define void @test_uqsub_s32(float noundef %a, ptr %dst) {
@@ -333,30 +339,32 @@ define void @test_sqdmulls_scalar(float %A, ptr %dst){
 }
 
 
-define i32 @test_sqneg_s32(float noundef %a) {
+define void @test_sqneg_s32(float noundef %a, ptr %dst) {
 ; CHECK-LABEL: test_sqneg_s32:
 ; CHECK:       // %bb.0: // %entry
 ; CHECK-NEXT:    fcvtzs s0, s0
 ; CHECK-NEXT:    sqneg s0, s0
-; CHECK-NEXT:    fmov w0, s0
+; CHECK-NEXT:    str s0, [x0]
 ; CHECK-NEXT:    ret
 entry:
   %cvt = tail call i32 @llvm.aarch64.neon.fcvtzs.i32.f32(float %a)
   %res = tail call i32 @llvm.aarch64.neon.sqneg.i32(i32 %cvt)
-  ret i32 %res
+  store i32 %res, ptr %dst, align 4
+  ret void
 }
 
-define i64 @test_sqneg_s64(float noundef %a) {
+define void @test_sqneg_s64(float noundef %a, ptr %dst) {
 ; CHECK-LABEL: test_sqneg_s64:
 ; CHECK:       // %bb.0: // %entry
 ; CHECK-NEXT:    fcvtzs d0, s0
 ; CHECK-NEXT:    sqneg d0, d0
-; CHECK-NEXT:    fmov x0, d0
+; CHECK-NEXT:    str d0, [x0]
 ; CHECK-NEXT:    ret
 entry:
   %cvt = tail call i64 @llvm.aarch64.neon.fcvtzs.i64.f32(float %a)
   %res = tail call i64 @llvm.aarch64.neon.sqneg.i64(i64 %cvt)
-  ret i64 %res
+  store i64 %res, ptr %dst, align 8
+  ret void
 }
 define void @test_sqdmulh_scalar(float noundef %a, ptr %dst) {
 ; CHECK-LABEL: test_sqdmulh_scalar:
