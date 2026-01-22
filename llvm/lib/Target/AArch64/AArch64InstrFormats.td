@@ -200,10 +200,27 @@ def dup_v4f32 :
              [(v2f32 (extract_subvector (v4f32 (AArch64duplane32 (v4f32 node:$LHS), node:$RHS)), (i64 0))),
               (v2f32 (AArch64duplane32 (v4f32 node:$LHS), node:$RHS))]>;
 
+// Match scalar_to_vector values, optionally wrapped in a bitcast through
+// f32/f64.
+def scalar_to_vector_any_64 : PatFrags<(ops node:$src),
+                          [(scalar_to_vector node:$src),
+                           (bitconvert (v2f32 (scalar_to_vector (f32 (bitconvert node:$src))))),
+                           (bitconvert (v1f64 (scalar_to_vector (f64 (bitconvert node:$src)))))]>;
+def scalar_to_vector_any_128 : PatFrags<(ops node:$src),
+                          [(scalar_to_vector node:$src),
+                           (bitconvert (v4f32 (scalar_to_vector (f32 (bitconvert node:$src))))),
+                           (bitconvert (v2f64 (scalar_to_vector (f64 (bitconvert node:$src)))))]>;
+
 // Match either a scalar_to_vector (from SDAG) or a vector_insert of undef (from GISel)
 def vec_ins_or_scal_vec : PatFrags<(ops node:$src),
                           [(vector_insert undef, node:$src, (i64 0)),
                            (scalar_to_vector node:$src)]>;
+def vec_ins_or_scal_vec_64 : PatFrags<(ops node:$src),
+                             [(vector_insert undef, node:$src, (i64 0)),
+                              (scalar_to_vector_any_64 node:$src)]>;
+def vec_ins_or_scal_vec_128 : PatFrags<(ops node:$src),
+                              [(vector_insert undef, node:$src, (i64 0)),
+                               (scalar_to_vector_any_128 node:$src)]>;
 
 //===----------------------------------------------------------------------===//
 // Asm Operand Classes.
@@ -624,30 +641,6 @@ def uimm5s4 : Operand<i64>, ImmLeaf<i64,
   let OperandType = "OPERAND_IMMEDIATE";
 }
 def uimm5s8 : Operand<i64>, ImmLeaf<i64,
-                [{ return Imm >= 0 && Imm < (32*8) && ((Imm % 8) == 0); }],
-                UImmS8XForm> {
-  let ParserMatchClass = UImm5s8Operand;
-  let PrintMethod = "printImmScale<8>";
-  let OperandType = "OPERAND_IMMEDIATE";
-}
-
-// tuimm5sN predicate - similar to uimm5sN, but use TImmLeaf (TargetConstant)
-// instead of ImmLeaf (Constant)
-def tuimm5s2 : Operand<i64>, TImmLeaf<i64,
-                [{ return Imm >= 0 && Imm < (32*2) && ((Imm % 2) == 0); }],
-                UImmS2XForm> {
-  let ParserMatchClass = UImm5s2Operand;
-  let PrintMethod = "printImmScale<2>";
-  let OperandType = "OPERAND_IMMEDIATE";
-}
-def tuimm5s4 : Operand<i64>, TImmLeaf<i64,
-                [{ return Imm >= 0 && Imm < (32*4) && ((Imm % 4) == 0); }],
-                UImmS4XForm> {
-  let ParserMatchClass = UImm5s4Operand;
-  let PrintMethod = "printImmScale<4>";
-  let OperandType = "OPERAND_IMMEDIATE";
-}
-def tuimm5s8 : Operand<i64>, TImmLeaf<i64,
                 [{ return Imm >= 0 && Imm < (32*8) && ((Imm % 8) == 0); }],
                 UImmS8XForm> {
   let ParserMatchClass = UImm5s8Operand;
@@ -8836,7 +8829,7 @@ multiclass SIMDScalarDUP<string asm> {
     let Inst{19-16} = 0b1000;
   }
 
-  def : Pat<(v1i64 (scalar_to_vector (i64 (vector_extract (v2i64 V128:$src),
+  def : Pat<(v1i64 (scalar_to_vector_any_64 (i64 (vector_extract (v2i64 V128:$src),
                                                           VectorIndexD:$idx)))),
             (!cast<Instruction>(NAME # i64) V128:$src, VectorIndexD:$idx)>;
 
@@ -10329,9 +10322,10 @@ multiclass SIMDScalarLShiftDTied<bit U, bits<5> opc, string asm,
   }
 }
 
-let mayStore = 0, mayLoad = 0, hasSideEffects = 0 in
 multiclass SIMDScalarRShiftBHS<bit U, bits<5> opc, string asm,
-                               SDPatternOperator OpNode = null_frag> {
+                               SDPatternOperator OpNode = null_frag,
+                               SDPatternOperator GOpNode = null_frag> {
+  let mayStore = 0, mayLoad = 0, hasSideEffects = 0 in {
   def b : BaseSIMDScalarShift<U, opc, {0,0,0,1,?,?,?},
                               FPR8, FPR16, vecshiftR8, asm, []> {
     let Inst{18-16} = imm{2-0};
@@ -10344,9 +10338,13 @@ multiclass SIMDScalarRShiftBHS<bit U, bits<5> opc, string asm,
 
   def s : BaseSIMDScalarShift<U, opc, {0,1,?,?,?,?,?},
                               FPR32, FPR64, vecshiftR32, asm,
-    [(set (i32 FPR32:$Rd), (OpNode (i64 FPR64:$Rn), vecshiftR32:$imm))]> {
+    [(set (f32 FPR32:$Rd), (OpNode (f64 FPR64:$Rn), vecshiftR32:$imm))]> {
     let Inst{20-16} = imm{4-0};
   }
+  }
+
+  def: Pat<(i32 (GOpNode (i64 FPR64:$Rd), vecshiftR32:$imm)),
+           (!cast<Instruction>(NAME # "s") FPR64:$Rd, vecshiftR32:$imm)>;
 }
 
 multiclass SIMDScalarLShiftBHSD<bit U, bits<5> opc, string asm,
