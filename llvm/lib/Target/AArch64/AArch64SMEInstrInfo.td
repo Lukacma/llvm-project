@@ -326,9 +326,9 @@ def : Pat<(AArch64_restore_za
 
 // Read and write TPIDR2_EL0
 def : Pat<(int_aarch64_sme_set_tpidr2 i64:$val),
-          (MSR 0xde85, GPR64:$val)>;
+          (MSR 0x5e85, GPR64:$val)>;
 def : Pat<(i64 (int_aarch64_sme_get_tpidr2)),
-          (MRS 0xde85)>;
+          (MRS 0x5e85)>;
 
 } // End let Predicates = [HasSMEandIsNonStreamingSafe]
 
