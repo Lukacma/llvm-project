@@ -3,6 +3,18 @@
 # RUN: not llvm-mc -triple=aarch64 -mattr=+v8.7a -disassemble %s 2>&1 | FileCheck %s
 # RUN: not llvm-mc -triple=aarch64 -mattr=+v8.4a -disassemble %s 2>&1 | FileCheck --check-prefix=CHECK-NO-XS %s
 
+[0x3f,0x30,0x03,0xd5]
+# CHECK: :[[@LINE-1]]:2: warning: invalid instruction encoding
+# CHECK-NO-XS: :[[@LINE-2]]:2: warning: invalid instruction encoding
+
+[0x3f,0x35,0x03,0xd5]
+# CHECK: :[[@LINE-1]]:2: warning: invalid instruction encoding
+# CHECK-NO-XS: :[[@LINE-2]]:2: warning: invalid instruction encoding
+
+[0x3f,0x3f,0x03,0xd5]
+# CHECK: :[[@LINE-1]]:2: warning: invalid instruction encoding
+# CHECK-NO-XS: :[[@LINE-2]]:2: warning: invalid instruction encoding
+
 [0x3f,0x32,0x03,0xd5]
 # CHECK: dsb	oshnxs
 # CHECK-NO-XS: :[[@LINE-2]]:2: warning: invalid instruction encoding
@@ -14,18 +26,6 @@
 # CHECK-NO-XS: :[[@LINE-2]]:2: warning: invalid instruction encoding
 [0x3f,0x3e,0x03,0xd5]
 # CHECK: dsb	synxs
-# CHECK-NO-XS: :[[@LINE-2]]:2: warning: invalid instruction encoding
-
-[0x3f,0x30,0x03,0xd5]
-# CHECK: :[[@LINE-1]]:2: warning: invalid instruction encoding
-# CHECK-NO-XS: :[[@LINE-2]]:2: warning: invalid instruction encoding
-
-[0x3f,0x35,0x03,0xd5]
-# CHECK: :[[@LINE-1]]:2: warning: invalid instruction encoding
-# CHECK-NO-XS: :[[@LINE-2]]:2: warning: invalid instruction encoding
-
-[0x3f,0x3f,0x03,0xd5]
-# CHECK: :[[@LINE-1]]:2: warning: invalid instruction encoding
 # CHECK-NO-XS: :[[@LINE-2]]:2: warning: invalid instruction encoding
 
 

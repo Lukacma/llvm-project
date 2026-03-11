@@ -3,7 +3,7 @@
 define i64 @read_encoded_register() nounwind {
 entry:
 ; CHECK-LABEL: read_encoded_register:
-; CHECK: mrs x0, S1_2_C3_C4_5
+; CHECK: mrs x0, S3_2_C3_C4_5
   %reg = call i64 @llvm.read_register.i64(metadata !0)
   ret i64 %reg
 }
@@ -19,7 +19,7 @@ entry:
 define void @write_encoded_register(i64 %x) nounwind {
 entry:
 ; CHECK-LABEL: write_encoded_register:
-; CHECK: msr S1_2_C3_C4_5, x0
+; CHECK: msr S3_2_C3_C4_5, x0
   call void @llvm.write_register.i64(metadata !0, i64 %x)
   ret void
 }
@@ -43,6 +43,6 @@ entry:
 declare i64 @llvm.read_register.i64(metadata) nounwind
 declare void @llvm.write_register.i64(metadata, i64) nounwind
 
-!0 = !{!"1:2:3:4:5"}
+!0 = !{!"3:2:3:4:5"}
 !1 = !{!"daif"}
 !2 = !{!"daifset"}
