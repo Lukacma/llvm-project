@@ -4155,8 +4155,10 @@ static int getIntOperandFromRegisterString(StringRef RegString) {
   (void)AllIntFields;
 
   // Need to combine the integer fields of the string into a single value
-  // based on the bit encoding of MRS/MSR instruction.
-  return (Ops[0] << 14) | (Ops[1] << 11) | (Ops[2] << 7) |
+  // based on the bit encoding of MRS/MSR instruction. We also mask Ops[0], as
+  // top bit as it is implicitly assumed to be 1 for MRS/MSR instruction and is
+  // not part of the encoding.
+  return ((Ops[0] & 0x1) << 14) | (Ops[1] << 11) | (Ops[2] << 7) |
          (Ops[3] << 3) | (Ops[4]);
 }
 

@@ -28,3 +28,12 @@ mrrs S3_0_c2_c0_1
 
 mrrs S3_0_c2_c0_1, x0, x1
 // CHECK-ERROR: error: expected first even register of a consecutive same-size even/odd register pair
+
+mrrs x0, x1, S0_0_c2_c0_1
+// CHECK-ERROR: error: expected readable system register
+
+mrrs x0, x1, S1_0_c2_c0_1
+// CHECK-ERROR: error: expected readable system register
+
+mrrs x0, x1, S4_0_c2_c0_1
+// CHECK-ERROR: error: expected readable system register

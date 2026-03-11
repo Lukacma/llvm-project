@@ -28,3 +28,13 @@ msrr S3_0_c2_c0_1
 
 msrr x0, x1, S3_0_c2_c0_1
 // CHECK-ERROR: error: expected first even register of a consecutive same-size even/odd register pair
+
+msrr   S0_0_c2_c0_1, x26, x27
+// CHECK-ERROR: error: expected writable system register or pstate
+
+
+msrr   S1_0_c2_c0_1, x26, x27
+// CHECK-ERROR: error: expected writable system register or pstate
+
+msrr   S4_0_c2_c0_1, x26, x27
+// CHECK-ERROR: error: expected writable system register or pstate

@@ -188,3 +188,11 @@ msrr   VTTBR_EL2, x24, x25
 msrr   VTTBR_EL2, x26, x27
 // CHECK-INST: msrr VTTBR_EL2, x26, x27
 // CHECK-ENCODING: encoding: [0x1a,0x21,0x5c,0xd5]
+
+msrr   S2_0_c2_c0_1, x26, x27
+// CHECK-INST: msrr S2_0_C2_C0_1, x26, x27
+// CHECK-ENCODING: encoding: [0x3a,0x20,0x50,0xd5]
+
+msrr   S3_0_c2_c0_1, x26, x27
+// CHECK-INST: msrr TTBR1_EL1, x26, x27
+// CHECK-ENCODING: encoding: [0x3a,0x20,0x58,0xd5]
