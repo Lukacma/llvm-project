@@ -501,9 +501,7 @@
 [0x27,0x56,0x18,0xd5]
 # CHECK: msr	TFSRE0_EL1, x7
 # NOMTE: msr	S3_0_C5_C6_1, x7
+# GMID_EL1 is read only
 [0x88,0x00,0x19,0xd5]
 # CHECK: msr	S3_1_C0_C0_4, x8
 # NOMTE: msr	S3_1_C0_C0_4, x8
-
-# GMID_EL1 is read only
-
