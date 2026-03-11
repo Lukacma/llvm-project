@@ -2,16 +2,6 @@
 # RUN: llvm-mc -triple aarch64-none-linux-gnu -mattr=+v8.5a --disassemble < %s | FileCheck %s
 # RUN: not llvm-mc -triple aarch64-none-linux-gnu -mattr=-v8.5a --disassemble < %s 2>&1 | FileCheck %s --check-prefix=CHECK-NOV85
 
-# Flag manipulation
-[0x3f,0x40,0x00,0xd5]
-# CHECK: xaflag
-# CHECK-NOV85: :[[@LINE-2]]:2: warning: invalid instruction encoding
-[0x5f,0x40,0x00,0xd5]
-# CHECK: axflag
-# CHECK-NOV85: :[[@LINE-2]]:2: warning: invalid instruction encoding
-
-
-
 # FP-to-int rounding, scalar
 [0x20,0x40,0x28,0x1e]
 # CHECK: frint32z	s0, s1
@@ -74,4 +64,12 @@
 # CHECK-NOV85: :[[@LINE-2]]:2: warning: invalid instruction encoding
 [0xe6,0xf8,0x21,0x6e]
 # CHECK: frint64x	v6.4s, v7.4s
+# CHECK-NOV85: :[[@LINE-2]]:2: warning: invalid instruction encoding
+
+# Flag manipulation
+[0x3f,0x40,0x00,0xd5]
+# CHECK: xaflag
+# CHECK-NOV85: :[[@LINE-2]]:2: warning: invalid instruction encoding
+[0x5f,0x40,0x00,0xd5]
+# CHECK: axflag
 # CHECK-NOV85: :[[@LINE-2]]:2: warning: invalid instruction encoding
