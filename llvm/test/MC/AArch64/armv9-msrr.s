@@ -105,6 +105,6 @@ msrr   S2_0_c2_c0_1, x26, x27
 // CHECK-INST: msrr S2_0_C2_C0_1, x26, x27
 // CHECK-ENCODING: encoding: [0x3a,0x20,0x50,0xd5]
 
-msrr   S3_0_c2_c0_1, x26, x27
-// CHECK-INST: msrr TTBR1_EL1, x26, x27
-// CHECK-ENCODING: encoding: [0x3a,0x20,0x58,0xd5]
+msrr   S3_1_c2_c0_1, x26, x27
+// CHECK-INST: msrr S3_1_C2_C0_1, x26, x27
+// CHECK-ENCODING: encoding: [0x3a,0x20,0x59,0xd5]

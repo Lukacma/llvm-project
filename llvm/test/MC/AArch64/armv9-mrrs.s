@@ -193,6 +193,6 @@ mrrs x0, x1, S2_0_c2_c0_1
 // CHECK-INST: mrrs x0, x1, S2_0_C2_C0_1
 // CHECK-ENCODING: encoding: [0x20,0x20,0x70,0xd5]
 
-mrrs x0, x1, S3_0_c2_c0_1
-// CHECK-INST: mrrs x0, x1, TTBR1_EL1
-// CHECK-ENCODING: encoding: [0x20,0x20,0x78,0xd5]
+mrrs x0, x1, S3_1_c2_c0_1
+// CHECK-INST: mrrs x0, x1, S3_1_C2_C0_1
+// CHECK-ENCODING: encoding: [0x20,0x20,0x79,0xd5]
