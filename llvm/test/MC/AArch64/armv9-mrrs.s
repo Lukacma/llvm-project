@@ -189,10 +189,10 @@ msrr   VTTBR_EL2, x26, x27
 // CHECK-INST: msrr VTTBR_EL2, x26, x27
 // CHECK-ENCODING: encoding: [0x1a,0x21,0x5c,0xd5]
 
-msrr   S2_0_c2_c0_1, x26, x27
-// CHECK-INST: msrr S2_0_C2_C0_1, x26, x27
-// CHECK-ENCODING: encoding: [0x3a,0x20,0x50,0xd5]
+mrrs x0, x1, S2_0_c2_c0_1
+// CHECK-INST: mrrs x0, x1, S2_0_C2_C0_1
+// CHECK-ENCODING: encoding: [0x20,0x20,0x70,0xd5]
 
-msrr   S3_0_c2_c0_1, x26, x27
-// CHECK-INST: msrr TTBR1_EL1, x26, x27
-// CHECK-ENCODING: encoding: [0x3a,0x20,0x58,0xd5]
+mrrs x0, x1, S3_0_c2_c0_1
+// CHECK-INST: mrrs x0, x1, TTBR1_EL1
+// CHECK-ENCODING: encoding: [0x20,0x20,0x78,0xd5]
