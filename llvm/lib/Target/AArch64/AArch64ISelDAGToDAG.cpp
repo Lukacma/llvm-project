@@ -4153,7 +4153,7 @@ static int getIntOperandFromRegisterString(StringRef RegString) {
   assert(AllIntFields &&
           "Unexpected non-integer value in special register string.");
   (void)AllIntFields;
-  
+
   if (Ops[0] < 2 || Ops[1] > 7 || Ops[2] > 15 || Ops[3] > 15 || Ops[4] > 7)
     return -1;
 
